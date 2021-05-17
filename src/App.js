@@ -1,24 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import "./App.css";
+import Maincomponent from "./components/Maincomponent";
+import Navbar from "./components/Navbar.jsx";
 
 function App() {
+  const [covData, setCovData] = useState([]);
+  const [search, setSearch] = useState("");
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    console.log(search);
+    fetchData(search);
+  };
+
+  const fetchData = async (query) => {
+    const temp = await fetch(
+      `https://api.covid19api.com/total/dayone/country/${query}`
+    ).then((res) => res.json());
+    let len = temp.length;
+    let tempp = temp[len - 1];
+    setCovData(tempp);
+    console.log(tempp);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Navbar
+        search={search}
+        setSearch={setSearch}
+        handleSearch={handleSearch}
+      />
+      <Maincomponent covData={covData} />
+    </>
   );
 }
 
